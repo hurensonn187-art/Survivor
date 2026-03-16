@@ -1,0 +1,142 @@
+package tiles;
+
+import java.awt.Graphics2D;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import javax.imageio.ImageIO;
+
+import survivor.GamePanel;
+
+public class TileManager {
+
+	
+	GamePanel gp;
+	public Tile[] tile;
+	public int mapTileNum[][];
+	
+	public TileManager(GamePanel gp) {
+		
+		this.gp = gp;
+		
+		tile = new Tile[10];	//nummer versch. an Tiles (ändern vllt)
+		mapTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
+		
+		getTileImage();
+		loadMap("/maps/mapWelt1.txt");
+	}
+	
+	public void getTileImage() {
+		
+		try {
+			
+			tile[0] = new Tile();
+			tile[0].image = ImageIO.read(getClass().getResourceAsStream("/tiles/BackgroundTest1.png"));
+			
+			tile[1] = new Tile();
+			tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/BackgroundTest2_2.png"));
+			tile[1].collision = true;
+			
+			tile[2] = new Tile();
+			tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/BackgroundTest3.png"));
+			tile[2].collision = true;
+			
+			
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	
+	public void loadMap(String filePath) {
+		
+		try { 
+	
+			InputStream is = getClass().getResourceAsStream(filePath); //lädt txt.file
+			BufferedReader br = new BufferedReader(new InputStreamReader(is)); //liest txt.file
+			
+			int col = 0;
+			int row = 0;
+			
+			while(col < gp.maxWorldCol && row < gp.maxWorldRow) {
+				
+				String line = br.readLine(); //liest eine line bis alle abgelaufen sind
+				
+				while(col < gp.maxWorldCol) {
+					
+					String numbers[] = line.split(" "); // macht aus der Linie an Zahlen einzelne
+					
+					int num = Integer.parseInt(numbers[col]);
+					
+					mapTileNum[col][row] = num;
+					col++;										
+				}
+				if(col == gp.maxWorldCol) {
+					col = 0;
+					row++;
+				}
+				
+			}
+			
+			br.close();
+			
+		}catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+	
+	public void draw(Graphics2D g2) {
+		
+		int worldCol = 0;
+		int worldRow = 0;
+
+		
+		while(worldCol < gp.maxWorldCol && worldRow < gp.maxWorldRow) {
+			
+			int tileNum = mapTileNum[worldCol][worldRow];
+			
+			int worldX = worldCol * gp.tileSize;  //passt Coordinaten an tilesize(64) an
+			int worldY = worldRow * gp.tileSize;
+			double screenX = worldX - gp.player.worldX + gp.player.screenX; //sagt wo die tiles an den screen gepackt werden
+			double screenY = worldY - gp.player.worldY + gp.player.screenY;
+			
+			
+			if(worldX + gp.tileSize > gp.player.worldX - gp.player.screenX && worldX - gp.tileSize < gp.player.worldX + gp.player.screenX && 
+			   worldY + gp.tileSize > gp.player.worldY - gp.player.screenY && worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
+				 
+				g2.drawImage(tile[tileNum].image,(int) screenX,(int) screenY, gp.tileSize, gp.tileSize, null);
+				
+			} //rendert nur die Tiles die um einen herum sind und nicht alle 
+			worldCol++;		
+			
+			if(worldCol == gp.maxWorldCol) {
+				worldCol = 0;
+				worldRow++;
+				
+			}
+		}
+		
+		
+	}
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
