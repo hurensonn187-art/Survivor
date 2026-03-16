@@ -120,7 +120,6 @@ public class Player extends Entity {
 						
 						switch(direction) {
 						case "up":
-							dy++;
 							System.out.println("Keine Kollision");
 							break;
 						}
