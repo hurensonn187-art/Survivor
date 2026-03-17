@@ -32,7 +32,7 @@ public class Player extends Entity {
 		solidArea = new Rectangle();	//collision box
 		solidArea.x = 6 * gp.scale;  //6 ist grösse der Pixel der CollisionBox beim Player.png
 		solidArea.y = 8 * gp.scale; // ""
-		solidArea.width = 5 * gp.scale ; // "" 
+		solidArea.width = 6 * gp.scale ; // "" 
 		solidArea.height = 9 * gp.scale;
 		
 		
@@ -67,13 +67,17 @@ public class Player extends Entity {
 	}
 	
 	
-	public void update() { //updated 60 pro Sekunde
+	public void update() { //updated 60 mal pro Sekunde
 	
 		
 		// Spieler bewegen mit Tastendruck
+		// Bewegung funktioniert nur wenn cChecker false raus gibt
 		
 				double dx = 0;
 				double dy = 0;
+				
+				collisionOn = false;
+				gp.cChecker.checkTile(this);
 		
 				if(keyH.upPressed == true || keyH.downPressed == true ||
 						keyH.leftPressed == true || keyH.rightPressed == true) { //damit sprite sich nicht ändert während man nichts drückt
@@ -81,51 +85,36 @@ public class Player extends Entity {
 					
 					if(keyH.upPressed == true) {  
 						direction = "up";		
-						System.out.println("h");
+						if(collisionOn == false) {
+							dy--;
+						}
+						//System.out.println("h");
 					}
 					if(keyH.downPressed == true) {
 						direction = "down";	
-						System.out.println("u");
+						if(collisionOn == false) {
+							dy++;
+						}
+						//System.out.println("u");
 					}
 					if(keyH.leftPressed == true) {
 						direction = "left";		
-						System.out.println("l");
+						if(collisionOn == false) {
+							dx--;
+						}
+						//System.out.println("l");
 					}
 					if(keyH.rightPressed == true) {
 						direction = "right";	
-						System.out.println("r");
+						if(collisionOn == false) {
+							dx++;
+						}
+						//System.out.println("r");
 					}
 					
 					
-				    
-				    
-					//checkt Tile Collision
-					collisionOn = false;
-					gp.cChecker.checkTile(this);
-					
-					// wenn false darf man laufen
-					if(collisionOn == false) {
-						
-						if(direction == "up") {
-							dy--;
-							//System.out.println("w");
-						}
-						if(direction == "down") {
-							dy++;
-							//System.out.println("s");
-						}
-						if(direction == "left") {
-							dx--;
-							//System.out.println("a");
-						}
-						if(direction == "right") {
-							dx++;
-							//System.out.println("d");
-						}
-					
-					
 					double length = Math.sqrt(dx * dx + dy * dy); //sorgt dafür das diagonales Laufen
-					  //nicht schneller als Horizontales ist
+					  											  //nicht schneller als Horizontales ist
 					if(length != 0) {
 						dx /= length; //macht das der Bewegungsvektor bei Diagonal 0.707 ist 
 						dy /= length;
@@ -134,7 +123,6 @@ public class Player extends Entity {
 						worldY+= dy * speed;
 					}
 					spriteCounter++;
-					}
 				}
 					
 					
