@@ -20,6 +20,7 @@ public class Player extends Entity {
 	
 	public int screenX;
 	public int screenY;
+	int hasKey = 0; // wieviele Schlüssel Objects hat der Spieler eingesammelt
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -30,11 +31,13 @@ public class Player extends Entity {
 		screenY = gp.screenHeight/2 - (gp.tileSize/2);
 		
 		solidArea = new Rectangle();	//collision box
-		solidArea.x = 6 * gp.scale;  //6 ist grösse der Pixel der CollisionBox beim Player.png
-		solidArea.y = 8 * gp.scale; // ""
-		solidArea.width = 6 * gp.scale ; // "" 
+		solidArea.x = 6 * gp.scale;  //6 ist Position des Pixels der CollisionBox beim Player.png
+		solidArea.y = 8 * gp.scale; 
+		solidAreaDefaultX = solidArea.x;
+		solidAreaDefaultY = solidArea.y;
+		solidArea.width = 6 * gp.scale ; 
 		solidArea.height = 9 * gp.scale;
-		
+	
 		
 		setDefaultValues();
 		getPlayerImage();
@@ -77,7 +80,9 @@ public class Player extends Entity {
 				double dy = 0;
 				
 				collisionOn = false;
-				gp.cChecker.checkTile(this);
+				gp.cChecker.checkTile(this);			
+				int objIndex = gp.cChecker.checkObject(this, true);
+				pickUpObject(objIndex);
 		
 				if(keyH.upPressed == true || keyH.downPressed == true ||
 						keyH.leftPressed == true || keyH.rightPressed == true) { //damit sprite sich nicht ändert während man nichts drückt
@@ -140,6 +145,31 @@ public class Player extends Entity {
 			}
 						
 				
+	public void pickUpObject(int i) {
+		
+		if(i != 999) {
+			
+			String objectName = gp.obj[i].name;
+			
+			switch(objectName) {
+			case "Key":
+				hasKey++;
+				gp.obj[i] = null;
+				System.out.println("Key:" + hasKey);
+				break;
+			case "DoorBrick":
+				if(hasKey > 0) {
+				hasKey--;
+				gp.obj[i] = null;
+				}
+				System.out.println("Key:" + hasKey);
+				break;
+			}
+			
+			//gp.obj[i] = null; //entfernt das Object
+		}
+	}
+	
 	
 	
 	public void draw(Graphics2D g2) {

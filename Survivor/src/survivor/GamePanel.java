@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
 import Entities.Player;
+import object.SuperObject;
 import tiles.TileManager;
 
 
@@ -32,17 +33,16 @@ public class GamePanel extends JPanel implements Runnable{
 	//FPS
 	int FPS = 60;
 	
+	
 	TileManager tileM = new TileManager(this);
 	KeyHandler keyH = new KeyHandler();
 	Thread gameThread;
 	public CollisionChecker cChecker = new CollisionChecker(this);
+	public AssetSetter aSetter = new AssetSetter(this);
 	public Player player = new Player(this,keyH);
+	public SuperObject obj[] = new SuperObject[10];
 	
 	
-	//Spielerposition am Start festlegen
-	int playerX = 100;
-	int playerY = 100;
-	int playerSpeed = 4;
 	
 	
 	
@@ -55,6 +55,10 @@ public class GamePanel extends JPanel implements Runnable{
 		this.setFocusable(true);
 	}
 
+	public void setupGame()	{   //platziert alle Items
+		aSetter.setObject();
+	}
+	
 	
 	// Gameloop machen 
 	public void startGameThread() {
@@ -77,8 +81,7 @@ public class GamePanel extends JPanel implements Runnable{
 			update();// updated Informationen
 			
 			repaint();// malt die Informationen
-			
-						
+				
 				
 			
 			try {
@@ -115,8 +118,17 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		Graphics2D g2 = (Graphics2D)g;
 		
+		//Tile
 		tileM.draw(g2);
 		
+		//Objects
+		for(int i = 0; i < obj.length; i++) {
+			if(obj[i] != null) {
+				obj[i].draw(g2, this);
+			}
+		}
+		
+		//Player
 		player.draw(g2);
 		
 		g2.dispose();
