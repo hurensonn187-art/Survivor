@@ -4,6 +4,7 @@ import object.OBJ_Chest;
 import object.OBJ_DoorBrick;
 import object.OBJ_Key;
 import object.OBJ_Portal;
+import object.OBJ_SpeedBoots;
 
 public class AssetSetter {
 
@@ -34,6 +35,10 @@ public class AssetSetter {
 		gp.obj[4] = new OBJ_DoorBrick();
 		gp.obj[4].worldX = 18 * gp.tileSize; 
 		gp.obj[4].worldY = 13 * gp.tileSize;
+		
+		gp.obj[5] = new OBJ_SpeedBoots();
+		gp.obj[5].worldX = 20 * gp.tileSize; 
+		gp.obj[5].worldY = 15 * gp.tileSize;
 	}
 
 

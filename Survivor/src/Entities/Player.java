@@ -153,6 +153,7 @@ public class Player extends Entity {
 			
 			switch(objectName) {
 			case "Key":
+				gp.playSoundEffect(1);
 				hasKey++;
 				gp.obj[i] = null;
 				System.out.println("Key:" + hasKey);
@@ -163,6 +164,10 @@ public class Player extends Entity {
 				gp.obj[i] = null;
 				}
 				System.out.println("Key:" + hasKey);
+				break;
+			case "SpeedBoots":
+				speed += 10;
+				gp.obj[i] = null;
 				break;
 			}
 			
