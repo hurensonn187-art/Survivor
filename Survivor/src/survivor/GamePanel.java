@@ -36,8 +36,10 @@ public class GamePanel extends JPanel implements Runnable{
 	//System
 	TileManager tileM = new TileManager(this);
 	KeyHandler keyH = new KeyHandler();
-	Sound sound = new Sound();
+	Sound music = new Sound();
+	Sound soundEffect = new Sound();
 	Thread gameThread;
+	public UI ui = new UI(this);
 	public CollisionChecker cChecker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this);
 	
@@ -60,7 +62,7 @@ public class GamePanel extends JPanel implements Runnable{
 
 	public void setupGame()	{   //platziert alle Items
 		aSetter.setObject();
-		playMusic(0); // -> sound array [1] -> BackgroundSongTest
+		//playMusic(0); // -> sound array [1] -> BackgroundSongTest
 	}
 	
 	
@@ -122,6 +124,12 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		Graphics2D g2 = (Graphics2D)g;
 		
+		//Debug
+		long drawStart = 0;
+		if(keyH.checkDrawTime == true) {
+		drawStart = System.nanoTime();  //zeigt an wieviel Zeit pro Update vergeht
+		}
+		
 		//Tile
 		tileM.draw(g2);
 		
@@ -135,22 +143,35 @@ public class GamePanel extends JPanel implements Runnable{
 		//Player
 		player.draw(g2);
 		
+		//UI
+		ui.draw(g2);
+		
+		//debug
+		if(keyH.checkDrawTime == true) {
+		long drawEnd = System.nanoTime();
+		long passed =drawEnd - drawStart;
+		g2.setColor(Color.white);
+		g2.drawString("drawTime: " + passed, 10, 400);
+		System.out.println(passed);
+		
+		}
+		
 		g2.dispose();
 	}
 
 	public void playMusic(int i) {
 		
-		sound.setFile(i);
-		sound.play();
-		sound.loop();
+		music.setFile(i);
+		music.play();
+		music.loop();
 	}
 
 	public void stopMusic() {
-		sound.stop();
+		music.stop();
 	}
 	public void playSoundEffect(int i) {
-		sound.setFile(i);
-		sound.play();
+		soundEffect.setFile(i);
+		soundEffect.play();
 	}
 
 

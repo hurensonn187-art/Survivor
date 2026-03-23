@@ -7,6 +7,9 @@ public class KeyHandler implements KeyListener{  // Alles was mit Tastendrücken
 
 	public boolean upPressed, downPressed, leftPressed, rightPressed, upLeftPressed, upRightPressed, downLeftPressed, downRightPressed; 
 	
+	//debug
+	boolean checkDrawTime = false;
+	
 	
 	public void keyTyped(KeyEvent e) { //merkt wenn eine Taste runtergedrückt wird
 	}
@@ -28,6 +31,17 @@ public class KeyHandler implements KeyListener{  // Alles was mit Tastendrücken
 		}
 		if(code == KeyEvent.VK_D) {
 			rightPressed = true;
+			
+		}
+		
+		
+		//debug
+		if(code == KeyEvent.VK_O) {
+			if(checkDrawTime == false) {
+				checkDrawTime = true;
+			}else if(checkDrawTime == true){
+				checkDrawTime = false;
+			}
 			
 		}
 		

@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 
 import survivor.GamePanel;
 import survivor.KeyHandler;
+import survivor.UtilityTool;
 
 public class Player extends Entity {
 
@@ -20,7 +21,7 @@ public class Player extends Entity {
 	
 	public int screenX;
 	public int screenY;
-	int hasKey = 0; // wieviele Schlüssel Objects hat der Spieler eingesammelt
+	public int hasKey = 0; // wieviele Schlüssel Objects hat der Spieler eingesammelt
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -52,24 +53,32 @@ public class Player extends Entity {
 	}
 	
 	public void getPlayerImage() {
-		try {
-			
-			up1 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerUp1.png"));
-			up2 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerUp2.png"));
-			down1 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerDown1.png"));
-			down2 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerDown2.png"));
-			left1 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerLeft1.png"));
-			left2 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerLeft2.png"));
-			right1 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerRight1.png"));
-			right2 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerRight2.png"));
-				
-		}catch(IOException e) {
-			e.printStackTrace();
-			System.out.println("Hilfe");
-		}
+		
+		up1 = setup("PlayerUp1");
+		up2 = setup("PlayerUp2");
+		down1 = setup("PlayerDown1");
+		down2 = setup("PlayerDown2");
+		left1 = setup("PlayerLeft1");
+		left2 = setup("PlayerLeft2");
+		right1 = setup("PlayerRight1");
+		right2 = setup("PlayerRight2");	
 	}
 	
-	
+	public BufferedImage setup(String imageName) {
+		UtilityTool uTool = new UtilityTool();
+		BufferedImage image = null;
+		
+			try {
+			
+				image = ImageIO.read(getClass().getResourceAsStream("/player/" + imageName + ".png"));
+				image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+				
+			}catch(IOException e) {
+				e.printStackTrace();
+				System.out.println("Hilfe");
+			}
+			return image;
+	}
 	public void update() { //updated 60 mal pro Sekunde
 	
 		
@@ -156,19 +165,27 @@ public class Player extends Entity {
 				gp.playSoundEffect(1);
 				hasKey++;
 				gp.obj[i] = null;
-				System.out.println("Key:" + hasKey);
+				gp.ui.showMessage("Key erhalten!");
+				//System.out.println("Key:" + hasKey);
 				break;
 			case "DoorBrick":
 				if(hasKey > 0) {
 				hasKey--;
 				gp.obj[i] = null;
+				gp.ui.showMessage("Tür offen");
+				}else {
+					gp.ui.showMessage("Wo ist dein Key?");
 				}
-				System.out.println("Key:" + hasKey);
+				//System.out.println("Key:" + hasKey);
 				break;
 			case "SpeedBoots":
 				speed += 10;
 				gp.obj[i] = null;
 				break;
+			case "Chest":  //TEST spiel beendet wenn Kiste offen
+				gp.ui.gameFinished = true;
+				gp.playMusic(0);
+				
 			}
 			
 			//gp.obj[i] = null; //entfernt das Object
@@ -219,7 +236,8 @@ public class Player extends Entity {
 			break;
 		}
 		
-		g2.drawImage(image,(int) screenX,(int) screenY, gp.tileSize, gp.tileSize, null);
-		
+		g2.drawImage(image,Math.round(screenX), Math.round(screenY), null);
+		//g2.setColor(Color.RED);    //Malt CollisionBox
+		//g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
 	}
 }
