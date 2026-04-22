@@ -12,6 +12,7 @@ import javax.imageio.ImageIO;
 
 import survivor.GamePanel;
 import survivor.KeyHandler;
+import survivor.UtilityTool;
 
 public class Player extends Entity {
 
@@ -20,6 +21,7 @@ public class Player extends Entity {
 	
 	public int screenX;
 	public int screenY;
+	public int hasKey = 0; // wieviele Schlüssel Objects hat der Spieler eingesammelt
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -30,11 +32,13 @@ public class Player extends Entity {
 		screenY = gp.screenHeight/2 - (gp.tileSize/2);
 		
 		solidArea = new Rectangle();	//collision box
-		solidArea.x = 6 * gp.scale;  //6 ist grösse der Pixel der CollisionBox beim Player.png
-		solidArea.y = 4 * gp.scale; // ""
-		solidArea.width = 4 * gp.scale ; // "" 
-		solidArea.height = 10 * gp.scale;
-		
+		solidArea.x = 6 * gp.scale;  //6 ist Position des Pixels der CollisionBox beim Player.png
+		solidArea.y = 8 * gp.scale; 
+		solidAreaDefaultX = solidArea.x;
+		solidAreaDefaultY = solidArea.y;
+		solidArea.width = 6 * gp.scale ; 
+		solidArea.height = 9 * gp.scale;
+	
 		
 		setDefaultValues();
 		getPlayerImage();
@@ -49,83 +53,93 @@ public class Player extends Entity {
 	}
 	
 	public void getPlayerImage() {
-		try {
-			
-			up1 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerUp1.png"));
-			up2 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerUp2.png"));
-			down1 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerDown1.png"));
-			down2 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerDown2.png"));
-			left1 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerLeft1.png"));
-			left2 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerLeft2.png"));
-			right1 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerRight1.png"));
-			right2 = ImageIO.read(getClass().getResourceAsStream("/player/PlayerRight2.png"));
-				
-		}catch(IOException e) {
-			e.printStackTrace();
-			System.out.println("Hilfe");
-		}
+		
+		up1 = setup("PlayerUp1");
+		up2 = setup("PlayerUp2");
+		down1 = setup("PlayerDown1");
+		down2 = setup("PlayerDown2");
+		left1 = setup("PlayerLeft1");
+		left2 = setup("PlayerLeft2");
+		right1 = setup("PlayerRight1");
+		right2 = setup("PlayerRight2");	
 	}
 	
-	
-	public void update() { //updated 60 pro Sekunde
+	public BufferedImage setup(String imageName) {
+		UtilityTool uTool = new UtilityTool();
+		BufferedImage image = null;
+		
+			try {
+			
+				image = ImageIO.read(getClass().getResourceAsStream("/player/" + imageName + ".png"));
+				image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+				
+			}catch(IOException e) {
+				e.printStackTrace();
+				System.out.println("Hilfe");
+			}
+			return image;
+	}
+	public void update() { //updated 60 mal pro Sekunde
 	
 		
 		// Spieler bewegen mit Tastendruck
+		// Bewegung funktioniert nur wenn cChecker false raus gibt
 		
 				double dx = 0;
 				double dy = 0;
+				
+				collisionOn = false;
+				gp.cChecker.checkTile(this);			
+				int objIndex = gp.cChecker.checkObject(this, true);
+				pickUpObject(objIndex);
 		
 				if(keyH.upPressed == true || keyH.downPressed == true ||
 						keyH.leftPressed == true || keyH.rightPressed == true) { //damit sprite sich nicht ändert während man nichts drückt
 					
 					
 					if(keyH.upPressed == true) {  
-						direction = "up";	
-						dy--;
-						System.out.println("Oben");
+						direction = "up";		
+						if(collisionOn == false) {
+							dy--;
+						}
+						//System.out.println("h");
 					}
 					if(keyH.downPressed == true) {
-						direction = "down";		
-						dy++;
-						System.out.println("Unten");
+						direction = "down";	
+						if(collisionOn == false) {
+							dy++;
+						}
+						//System.out.println("u");
 					}
 					if(keyH.leftPressed == true) {
-						direction = "left";	
-						dx--;
-						System.out.println("Links");
+						direction = "left";		
+						if(collisionOn == false) {
+							dx--;
+						}
+						//System.out.println("l");
 					}
 					if(keyH.rightPressed == true) {
 						direction = "right";	
-						dx++;
-						System.out.println("Rechts");
+						if(collisionOn == false) {
+							dx++;
+						}
+						//System.out.println("r");
 					}
+					
 					
 					double length = Math.sqrt(dx * dx + dy * dy); //sorgt dafür das diagonales Laufen
-																  //nicht schneller als Horizontales ist
-				    if(length != 0) {
-				        dx /= length; //macht das der Bewegungsvektor bei Diagonal 0.707 ist 
-				        dy /= length;
+					  											  //nicht schneller als Horizontales ist
+					if(length != 0) {
+						dx /= length; //macht das der Bewegungsvektor bei Diagonal 0.707 ist 
+						dy /= length;
 
-				        worldX += dx * speed;
-				        worldY+= dy * speed;
-				    }
-				    
-				    
-					//checkt Tile Collision
-					collisionOn = false;
-					gp.cChecker.checkTile(this);
-					
-					// wenn false darf man laufen (noch zu machen)
-					if(collisionOn = false) {
-						
-						switch(direction) {
-						case "up":
-							System.out.println("Keine Kollision");
-							break;
-						}
+						worldX += dx * speed;
+						worldY+= dy * speed;
 					}
-					
 					spriteCounter++;
+				}
+					
+					
 					
 					if(spriteCounter > 15 ) { //alle 15 Updates wechselt Sprite
 						if(spriteNum == 1) {
@@ -137,10 +151,48 @@ public class Player extends Entity {
 						spriteCounter = 0;
 					}
 					
-				}
+			}
 						
 				
+	public void pickUpObject(int i) {
+		
+		if(i != 999) {
+			
+			String objectName = gp.obj[i].name;
+			
+			switch(objectName) {
+			case "Key":
+				gp.playSoundEffect(1);
+				hasKey++;
+				gp.obj[i] = null;
+				gp.ui.showMessage("Key erhalten!");
+				//System.out.println("Key:" + hasKey);
+				break;
+			case "DoorBrick":
+				if(hasKey > 0) {
+				hasKey--;
+				gp.obj[i] = null;
+				gp.ui.showMessage("Tür offen");
+				}else {
+					gp.ui.showMessage("Wo ist dein Key?");
+				}
+				//System.out.println("Key:" + hasKey);
+				break;
+			case "SpeedBoots":
+				speed += 10;
+				gp.obj[i] = null;
+				break;
+			case "Chest":  //TEST spiel beendet wenn Kiste offen
+				gp.ui.gameFinished = true;
+				gp.playMusic(0);
+				
+			}
+			
+			//gp.obj[i] = null; //entfernt das Object
+		}
 	}
+	
+	
 	
 	public void draw(Graphics2D g2) {
 		
@@ -184,7 +236,8 @@ public class Player extends Entity {
 			break;
 		}
 		
-		g2.drawImage(image,(int) screenX,(int) screenY, gp.tileSize, gp.tileSize, null);
-		
+		g2.drawImage(image,Math.round(screenX), Math.round(screenY), null);
+		//g2.setColor(Color.RED);    //Malt CollisionBox
+		//g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
 	}
 }

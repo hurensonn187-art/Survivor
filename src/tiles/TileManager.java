@@ -1,6 +1,7 @@
 package tiles;
 
 import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,6 +10,7 @@ import java.io.InputStreamReader;
 import javax.imageio.ImageIO;
 
 import survivor.GamePanel;
+import survivor.UtilityTool;
 
 public class TileManager {
 
@@ -28,20 +30,24 @@ public class TileManager {
 		loadMap("/maps/mapWelt1.txt");
 	}
 	
-	public void getTileImage() {
+	public void getTileImage() { //Holt sich die Bilder der Tiles
 		
-		try {
+			setup(0, "Background1Gras", false);
+			setup(1, "BackgroundTest2_2", true);
+			setup(2, "Background3WasserStill", true);
+	
+	}
+	
+	public void setup(int index, String imageName, boolean collision){  //scaled die Images damit es nicht im gameLoop gemacht wird und mehr Leistung zieht
+		
+		UtilityTool uTool = new UtilityTool();
+		
+		try{
 			
-			tile[0] = new Tile();
-			tile[0].image = ImageIO.read(getClass().getResourceAsStream("/tiles/BackgroundTest1.png"));
-			
-			tile[1] = new Tile();
-			tile[1].image = ImageIO.read(getClass().getResourceAsStream("/tiles/BackgroundTest2_2.png"));
-			tile[1].collision = true;
-			
-			tile[2] = new Tile();
-			tile[2].image = ImageIO.read(getClass().getResourceAsStream("/tiles/BackgroundTest3.png"));
-			tile[2].collision = true;
+			tile[index] = new Tile();
+			tile[index].image = ImageIO.read(getClass().getResourceAsStream("/tiles/" + imageName + ".png"));
+			tile[index].image = uTool.scaleImage(tile[index].image, gp.tileSize, gp.tileSize);
+			tile[index].collision = collision;
 			
 			
 		}catch(IOException e) {
@@ -110,7 +116,7 @@ public class TileManager {
 			if(worldX + gp.tileSize > gp.player.worldX - gp.player.screenX && worldX - gp.tileSize < gp.player.worldX + gp.player.screenX && 
 			   worldY + gp.tileSize > gp.player.worldY - gp.player.screenY && worldY - gp.tileSize < gp.player.worldY + gp.player.screenY) {
 				 
-				g2.drawImage(tile[tileNum].image,(int) screenX,(int) screenY, gp.tileSize, gp.tileSize, null);
+				g2.drawImage(tile[tileNum].image,(int) screenX,(int) screenY, null);
 				
 			} //rendert nur die Tiles die um einen herum sind und nicht alle 
 			worldCol++;		
