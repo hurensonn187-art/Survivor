@@ -2,7 +2,6 @@ package Entities;
 
 
 
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -102,7 +101,7 @@ public class Player extends Entity {
 						if(collisionOn == false) {
 							dy--;
 						}
-						//System.out.println("h");
+						System.out.println("h");
 					}
 					if(keyH.downPressed == true) {
 						direction = "down";	

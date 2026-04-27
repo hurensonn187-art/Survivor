@@ -8,6 +8,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
 import Entities.Player;
+import Entities.Slime;
 import object.SuperObject;
 import tiles.TileManager;
 
@@ -46,6 +47,7 @@ public class GamePanel extends JPanel implements Runnable{
 	//Entities und Objects
 	public Player player = new Player(this,keyH);
 	public SuperObject obj[] = new SuperObject[10];
+	public Slime slime = new Slime(this);
 	
 	
 	
@@ -142,7 +144,10 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		//Player
 		player.draw(g2);
-		
+
+		//Enemies
+		slime.draw(g2);
+
 		//UI
 		ui.draw(g2);
 		
