@@ -47,7 +47,7 @@ public class GamePanel extends JPanel implements Runnable{
 	//Entities und Objects
 	public Player player = new Player(this,keyH);
 	public SuperObject obj[] = new SuperObject[10];
-	public Slime slime = new Slime(this);
+	public Slime slime = new Slime(this,20,20);
 	
 	
 	

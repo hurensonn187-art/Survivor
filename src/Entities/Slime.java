@@ -1,7 +1,6 @@
 package Entities;
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -14,12 +13,12 @@ public class Slime extends Entity {
 
     GamePanel gp;
 
-    public Slime(GamePanel gp) {
+    public Slime(GamePanel gp,int x, int y) {
 
         this.gp = gp;
 
-        worldX = 24 * gp.tileSize;
-        worldY = 24 * gp.tileSize;
+        worldX = x * gp.tileSize;
+        worldY = y * gp.tileSize;
         speed = 2;
 
         direction="down";
@@ -33,7 +32,23 @@ public class Slime extends Entity {
         solidArea.width = 12 * gp.scale;
         solidArea.height = 15 * gp.scale;
 
+        getSlimeImage();
     }
+
+   // public void moveSlime(){
+   //     if(worldX <480 ) {   //480 256 sind screenX und screenY vom Player -> Slime bewegt sich Richtung Spieler
+   //         worldX += speed;
+    //    }
+    //    if(worldX >480 ) {
+   //         worldX -= speed;
+    //    }
+   //     if(worldY <256 ) {
+   //         worldY += speed;
+   //     }
+    //    if(worldY >256 ) {
+   //         worldY -= speed;
+   //     }
+    //}
 
     public void getSlimeImage() {
 
@@ -41,47 +56,53 @@ public class Slime extends Entity {
         down1 = setup("SlimeDown");
         left1 = setup("SlimeLeft");
         right1 = setup("SlimeRight");
+        //System.out.println("klappt schleim");
     }
 
     public BufferedImage setup(String imageName) {
         UtilityTool uTool = new UtilityTool();
-        BufferedImage image = null;
+        BufferedImage image2 = null;
 
         try {
 
-            image = ImageIO.read(getClass().getResourceAsStream("/enemies/slime/" + imageName + ".png"));
-            image = uTool.scaleImage(image, gp.tileSize, gp.tileSize);
+            image2 = ImageIO.read(getClass().getResourceAsStream("/enemies/slime/" + imageName + ".png"));
+            image2 = uTool.scaleImage(image2, gp.tileSize, gp.tileSize);
 
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Hilfe");
         }
-        return image;
+        return image2;
     }
     public void draw(Graphics2D g2) {
 
-        BufferedImage image = null;
+        moveSlime();
+
+        double screenX = worldX - gp.player.worldX + gp.player.screenX;
+        double screenY = worldY - gp.player.worldY + gp.player.screenY;
+
+        BufferedImage image2 = null;
 
         switch(direction) {
             case "up":
-                    image = up1;
+                    image2 = up1;
                 break;
             case "down":
-                    image = down1;
+                    image2 = down1;
                 break;
             case "left":
-                    image = left1;
+                    image2 = left1;
                 break;
             case "right":
-                    image = right1;
+                    image2 = right1;
                 break;
             default:
-                image = down1; //falls was schiefgeht
+                image2 = down1; //falls was schiefgeht
                 break;
         }
 
-        g2.drawImage(image,(int)worldX,(int) worldY, null);
-        //g2.setColor(Color.RED);    //Malt CollisionBox
-        //g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
+        g2.drawImage(image2,(int)screenX,(int) screenY, null);
+        g2.setColor(Color.GREEN);    //Malt CollisionBox
+        g2.drawRect((int)screenX , (int)screenY, 64, 64);
     }
 }

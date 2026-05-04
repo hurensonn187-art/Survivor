@@ -2,8 +2,7 @@ package Entities;
 
 
 
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -60,7 +59,8 @@ public class Player extends Entity {
 		left1 = setup("PlayerLeft1");
 		left2 = setup("PlayerLeft2");
 		right1 = setup("PlayerRight1");
-		right2 = setup("PlayerRight2");	
+		right2 = setup("PlayerRight2");
+		//System.out.println("klappt Spieler");
 	}
 	
 	public BufferedImage setup(String imageName) {
@@ -101,7 +101,8 @@ public class Player extends Entity {
 						if(collisionOn == false) {
 							dy--;
 						}
-						System.out.println("h");
+						//
+						// System.out.println("h");
 					}
 					if(keyH.downPressed == true) {
 						direction = "down";	
@@ -234,8 +235,10 @@ public class Player extends Entity {
 			image = down1; //falls was schiefgeht
 			break;
 		}
-		
+
 		g2.drawImage(image,Math.round(screenX), Math.round(screenY), null);
+		System.out.println(screenX + "   " +  screenY);
+
 		//g2.setColor(Color.RED);    //Malt CollisionBox
 		//g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
 	}
