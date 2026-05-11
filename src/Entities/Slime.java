@@ -8,10 +8,12 @@ import javax.imageio.ImageIO;
 
 import survivor.GamePanel;
 import survivor.UtilityTool;
+import Entities.Player;
 
 public class Slime extends Entity {
 
     GamePanel gp;
+
 
     public Slime(GamePanel gp,int x, int y) {
 
@@ -35,20 +37,34 @@ public class Slime extends Entity {
         getSlimeImage();
     }
 
-   // public void moveSlime(){
-   //     if(worldX <480 ) {   //480 256 sind screenX und screenY vom Player -> Slime bewegt sich Richtung Spieler
-   //         worldX += speed;
-    //    }
-    //    if(worldX >480 ) {
-   //         worldX -= speed;
-    //    }
-   //     if(worldY <256 ) {
-   //         worldY += speed;
-   //     }
-    //    if(worldY >256 ) {
-   //         worldY -= speed;
-   //     }
-    //}
+    public void moveSlime(){
+
+        double dx = gp.player.worldX - worldX;
+        double dy = gp.player.worldY - worldY;
+
+
+        double distance = Math.sqrt(dx * dx + dy * dy); //sorgt dafür das diagonales Laufen
+                                                        //nicht schneller als Horizontales ist
+        if(distance != 0) {
+            dx /= distance;
+            dy /= distance;
+
+            worldX += dx * speed;
+            worldY+= dy * speed;
+        }
+
+        if(Math.abs(dx) > Math.abs(dy)) {
+
+            if(dx > 0) direction = "right";
+            else direction = "left";
+
+        } else {
+
+            if(dy > 0) direction = "down";
+            else direction = "up";
+        }
+
+    }
 
     public void getSlimeImage() {
 
@@ -76,25 +92,23 @@ public class Slime extends Entity {
     }
     public void draw(Graphics2D g2) {
 
-        moveSlime();
-
         double screenX = worldX - gp.player.worldX + gp.player.screenX;
         double screenY = worldY - gp.player.worldY + gp.player.screenY;
 
         BufferedImage image2 = null;
 
         switch(direction) {
+            case "right":
+                    image2 = right1;
+                break;
+            case "left":
+                    image2 = left1;
+                break;
             case "up":
                     image2 = up1;
                 break;
             case "down":
                     image2 = down1;
-                break;
-            case "left":
-                    image2 = left1;
-                break;
-            case "right":
-                    image2 = right1;
                 break;
             default:
                 image2 = down1; //falls was schiefgeht
@@ -102,7 +116,8 @@ public class Slime extends Entity {
         }
 
         g2.drawImage(image2,(int)screenX,(int) screenY, null);
-        g2.setColor(Color.GREEN);    //Malt CollisionBox
-        g2.drawRect((int)screenX , (int)screenY, 64, 64);
+        //g2.setColor(Color.GREEN);    //Malt CollisionBox
+        //g2.drawRect((int)screenX , (int)screenY, 64, 64);
+        //System.out.println(worldX + "   " + worldY);
     }
 }

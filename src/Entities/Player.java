@@ -237,7 +237,7 @@ public class Player extends Entity {
 		}
 
 		g2.drawImage(image,Math.round(screenX), Math.round(screenY), null);
-		System.out.println(screenX + "   " +  screenY);
+		//System.out.println(screenX + "   " +  screenY);
 
 		//g2.setColor(Color.RED);    //Malt CollisionBox
 		//g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
