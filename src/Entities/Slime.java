@@ -34,6 +34,9 @@ public class Slime extends Entity {
         solidArea.width = 12 * gp.scale;
         solidArea.height = 15 * gp.scale;
 
+        defaultDamage = 5;
+
+
         getSlimeImage();
     }
 
@@ -63,6 +66,10 @@ public class Slime extends Entity {
             if(dy > 0) direction = "down";
             else direction = "up";
         }
+
+    }
+
+    public void doDamage(){
 
     }
 

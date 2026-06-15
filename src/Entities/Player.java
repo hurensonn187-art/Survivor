@@ -20,6 +20,8 @@ public class Player extends Entity {
 	public int screenX;
 	public int screenY;
 	public int hasKey = 0; // wieviele Schlüssel Objects hat der Spieler eingesammelt
+
+	int invincibilityFrames;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -48,6 +50,7 @@ public class Player extends Entity {
 		worldY = gp.tileSize * 26;
 		speed = 4;
 		direction = "down";
+		healthPoints = 100;
 	}
 	
 	public void getPlayerImage() {
@@ -78,6 +81,24 @@ public class Player extends Entity {
 			}
 			return image;
 	}
+
+	void takeDamage(){
+		double xDistance = gp.player.worldX - gp.slime.worldX;
+		double yDistance = gp.player.worldY - gp.slime.worldY;
+
+		// Satz des Pythagoras: c^2 = a^2 + b^2
+		double distanceSquared = (xDistance * xDistance) + (yDistance * yDistance);
+
+		// Der Radius, ab dem der Schleim Schaden macht (z. B. 16.0 Pixel)
+		double attackRadius = 16.0;
+
+		// Wir vergleichen die quadrierten Werte
+		if(distanceSquared < (attackRadius * attackRadius)){
+			healthPoints -= gp.slime.defaultDamage;
+			//invincibilityFrames = 30;
+		}
+	}
+
 	public void update() { //updated 60 mal pro Sekunde
 	
 		
@@ -150,8 +171,15 @@ public class Player extends Entity {
 						}
 						spriteCounter = 0;
 					}
-					
-			}
+
+		//if(invincibilityFrames == 0){
+			takeDamage();
+		//}else{
+			//invincibilityFrames--;
+		//}
+
+
+		}
 						
 				
 	public void pickUpObject(int i) {
@@ -241,5 +269,10 @@ public class Player extends Entity {
 
 		//g2.setColor(Color.RED);    //Malt CollisionBox
 		//g2.drawRect(screenX + solidArea.x, screenY + solidArea.y, solidArea.width, solidArea.height);
+
+		System.out.println(healthPoints);
+		//System.out.println("Spieler" + worldX + "   " +  worldY);
+		//System.out.println("schleim" +gp.slime.worldX + "   " +  gp.slime.worldY);
+
 	}
 }
