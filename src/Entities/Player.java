@@ -182,7 +182,7 @@ public class Player extends Entity {
 				if(invincibilityFrames == 0){
 					isInvincible = false;
 					invincibilityFrames = 30;
-				}
+				}//
 			}
 
 
