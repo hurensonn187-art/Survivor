@@ -21,7 +21,8 @@ public class Player extends Entity {
 	public int screenY;
 	public int hasKey = 0; // wieviele Schlüssel Objects hat der Spieler eingesammelt
 
-	int invincibilityFrames;
+	int invincibilityFrames = 30;
+	boolean isInvincible = false;
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
@@ -93,9 +94,11 @@ public class Player extends Entity {
 		double attackRadius = 16.0;
 
 		// Wir vergleichen die quadrierten Werte
-		if(distanceSquared < (attackRadius * attackRadius)){
+		if(isInvincible == false){
+		if(distanceSquared < (attackRadius * attackRadius)) {
 			healthPoints -= gp.slime.defaultDamage;
-			//invincibilityFrames = 30;
+			isInvincible = true;
+		}
 		}
 	}
 
@@ -172,11 +175,18 @@ public class Player extends Entity {
 						spriteCounter = 0;
 					}
 
-		//if(invincibilityFrames == 0){
-			takeDamage();
-		//}else{
-			//invincibilityFrames--;
-		//}
+			// iFrames counter damit man nicht sofort stirbt
+			takeDamage(); // geht eine halbe Sekunde (60 Frames pro Sekunde, davon 30)
+			if(isInvincible == true){
+				invincibilityFrames --;
+				if(invincibilityFrames == 0){
+					isInvincible = false;
+					invincibilityFrames = 30;
+				}
+			}
+
+
+
 
 
 		}

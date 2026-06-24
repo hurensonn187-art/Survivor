@@ -17,6 +17,7 @@ public class UI {
 	public String message = " ";
 	int messageCounter = 0;
 	public boolean gameFinished = false;
+	public boolean gameLost = false;
 	
 	double playTime;
 	DecimalFormat dFormat = new DecimalFormat("#0.0"); //1 Decimalstelle Bei Playtime
@@ -35,65 +36,89 @@ public class UI {
 	}
 	
 	public void draw(Graphics g2) {  //malt Font und Text an der Stelle
-		
+
 		if (gameFinished == true) {
-			
+
 			String text;
 			int textLength;
 			int x;
 			int y;
-			
+
 			g2.setFont(arial_80B);
 			g2.setColor(Color.BLUE);
-			
+
 			text = "Spiel Vorbei :(";
-			textLength = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth(); //gibt Länge von Text	
-			x = gp.screenWidth/2 - textLength/2;
-			y = gp.screenHeight/2 - gp.tileSize * 2;
+			textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth(); //gibt Länge von Text
+			x = gp.screenWidth / 2 - textLength / 2;
+			y = gp.screenHeight / 2 - gp.tileSize * 2;
 			g2.drawString(text, x, y);
-			
+
 			g2.setFont(arial_40);
 			g2.setColor(Color.RED);
-			
+
 			text = "Finale Zeit: " + dFormat.format(playTime);
-			textLength = (int)g2.getFontMetrics().getStringBounds(text, g2).getWidth(); //gibt Länge von Text	
-			x = gp.screenWidth/2 - textLength/2;
-			y = gp.screenHeight/2 + gp.tileSize * 2;
+			textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth(); //gibt Länge von Text
+			x = gp.screenWidth / 2 - textLength / 2;
+			y = gp.screenHeight / 2 + gp.tileSize * 2;
 			g2.drawString(text, x, y);
-			
+
 			gp.gameThread = null;
-			
-		}else {	
+
+		} else {
 			g2.setFont(arial_40);
 			g2.setColor(Color.white);
-			g2.drawImage(keyImage, gp.tileSize/2, gp.tileSize/2, gp.tileSize, gp.tileSize, null);
+			g2.drawImage(keyImage, gp.tileSize / 2, gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
 			g2.drawString("x " + gp.player.hasKey, 90, 70);
-			
-		//Time
-			playTime += (double)1/60;
+
+			//Time
+			playTime += (double) 1 / 60;
 			g2.drawString("Time " + dFormat.format(playTime), gp.tileSize * 13, 70);
-			
-		//Nachricht
-			if(messageOn == true) {
-			
+
+			//Nachricht
+			if (messageOn == true) {
+
 				g2.setFont(g2.getFont().deriveFont(30F));
 				g2.drawString(message, gp.tileSize * 1, gp.tileSize * 4);
-			
-				messageCounter ++;
-			
-				if(messageCounter > 120) {  //lässt nachricht nach 120 Frames verschwinden
-				messageCounter = 0;
-				messageOn = false;
+
+				messageCounter++;
+
+				if (messageCounter > 120) {  //lässt nachricht nach 120 Frames verschwinden
+					messageCounter = 0;
+					messageOn = false;
 				}
 			}
 		}
-		
-	} 
-	
-	
-	
-	
-	
+		if (gameLost == true) {
+
+			String text;
+			int textLength;
+			int x;
+			int y;
+
+			g2.setFont(arial_80B);
+			g2.setColor(Color.RED);
+
+			text = "Spiel Verloren :(";
+			textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth(); //gibt Länge von Text
+			x = gp.screenWidth / 2 - textLength / 2;
+			y = gp.screenHeight / 2 - gp.tileSize * 2;
+			g2.drawString(text, x, y);
+
+			g2.setFont(arial_40);
+			g2.setColor(Color.RED);
+
+			text = "Finale Zeit: " + dFormat.format(playTime);
+			textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth(); //gibt Länge von Text
+			x = gp.screenWidth / 2 - textLength / 2;
+			y = gp.screenHeight / 2 + gp.tileSize * 2;
+			g2.drawString(text, x, y);
+
+			gp.gameThread = null;
+
+		}
+
+
+	}
 	
 	
 	
