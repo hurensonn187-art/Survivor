@@ -11,7 +11,7 @@ import object.OBJ_Key;
 public class UI {
 
 	GamePanel gp;
-	Font arial_40, arial_80B; // B -> Bold
+	Font arial_40, arial_80B, arial_30; // B -> Bold
 	BufferedImage keyImage;
 	public boolean messageOn = false;
 	public String message = " ";
@@ -26,6 +26,7 @@ public class UI {
 		this.gp = gp;
 		
 		arial_40 = new Font("Arial", Font.PLAIN, 40);
+		arial_30 = new Font("Arial", Font.PLAIN, 30);
 		arial_80B = new Font("Arial", Font.BOLD, 80);
 		OBJ_Key key = new OBJ_Key(gp);
 		keyImage = key.image;
@@ -47,7 +48,7 @@ public class UI {
 			g2.setFont(arial_80B);
 			g2.setColor(Color.BLUE);
 
-			text = "Spiel Vorbei :(";
+			text = "Spiel Gewonnen :)";
 			textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth(); //gibt Länge von Text
 			x = gp.screenWidth / 2 - textLength / 2;
 			y = gp.screenHeight / 2 - gp.tileSize * 2;
@@ -116,8 +117,12 @@ public class UI {
 			gp.gameThread = null;
 
 		}
-
-
+		//Lebensbalken anzeigen
+		g2.setColor(Color.RED);
+		g2.drawRect((gp.screenWidth -100) / 2,35,gp.player.healthPoints * 2,16);
+		g2.fillRect((gp.screenWidth -100) / 2,35,gp.player.healthPoints * 2,16);
+		g2.setFont(arial_30);
+		g2.drawString("Leben:" + gp.player.healthPoints, (gp.screenWidth -100) / 2,30);
 	}
 	
 	

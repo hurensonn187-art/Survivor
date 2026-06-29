@@ -4,12 +4,14 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
 import Entities.Player;
 import Entities.Slime;
 import object.SuperObject;
+import survivor.EnemySpawner;
 import tiles.TileManager;
 
 
@@ -32,7 +34,7 @@ public class GamePanel extends JPanel implements Runnable{
 	//public final int worldHeight = tileSize * maxWorldRow;
 	
 	//FPS
-	int FPS = 60;
+	public int FPS = 60;
 	
 	//System
 	TileManager tileM = new TileManager(this);
@@ -43,6 +45,8 @@ public class GamePanel extends JPanel implements Runnable{
 	public UI ui = new UI(this);
 	public CollisionChecker cChecker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this);
+	public ArrayList<Slime> slimes = new ArrayList<>();
+	EnemySpawner spawner = new EnemySpawner(this);
 	
 	//Entities und Objects
 	public Player player = new Player(this,keyH);
@@ -118,7 +122,16 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		player.update();
 		slime.moveSlime();
-		
+
+
+		//Spawner Slimes
+		spawner.update(slimes); //updated die Slimes (Spawncounter usw.)
+
+		for (int i = 0; i < slimes.size(); i++) { //Bewegt alle Schleime
+			if (slimes.get(i) != null) {
+				slimes.get(i).moveSlime();
+			}
+		}
 	}
 	
 	public void paintComponent(Graphics g) { //Paint Component um alles zu malen
