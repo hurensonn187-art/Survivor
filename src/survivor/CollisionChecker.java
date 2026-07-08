@@ -23,7 +23,8 @@ public class CollisionChecker {
 		int entityBottomRow = entityBottomWorldY/gp.tileSize;
 		
 		int tileNum1, tileNum2;
-		
+
+
 		switch(entity.direction) {
 		
 		case "up":

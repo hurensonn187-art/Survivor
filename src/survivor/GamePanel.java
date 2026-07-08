@@ -13,6 +13,7 @@ import Entities.Slime;
 import object.SuperObject;
 import survivor.EnemySpawner;
 import tiles.TileManager;
+import weapons.Projectile;
 
 
 public class GamePanel extends JPanel implements Runnable{
@@ -45,13 +46,18 @@ public class GamePanel extends JPanel implements Runnable{
 	public UI ui = new UI(this);
 	public CollisionChecker cChecker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this);
-	public ArrayList<Slime> slimes = new ArrayList<>();
-	EnemySpawner spawner = new EnemySpawner(this);
+
+	public EnemySpawner spawner = new EnemySpawner(this);
 	
 	//Entities und Objects
 	public Player player = new Player(this,keyH);
 	public SuperObject obj[] = new SuperObject[10];
-	public Slime slime = new Slime(this,20,20);
+	public ArrayList<Slime> slimes = new ArrayList<>();
+
+	//Waffen
+	public ArrayList<Projectile> projectiles = new ArrayList<>();
+	int weaponAttackCounter = 0;
+	int weaponCooldown = 60; // Schießt jede Sekunde (bei 60 FPS)
 	
 	
 	
@@ -121,14 +127,54 @@ public class GamePanel extends JPanel implements Runnable{
 	public void update() {
 		
 		player.update();
-		slime.moveSlime();
+
+		// --- WAFFENSYSTEM AUTOMATISCHES FEUERN ---
+		weaponAttackCounter++;
+		if(weaponAttackCounter >= weaponCooldown) {
+			// Ein Projektil an der Position des Spielers in seine Blickrichtung abfeuern
+			projectiles.add(new Projectile(this, player.worldX, player.worldY, player.direction));
+			weaponAttackCounter = 0; // Cooldown zurücksetzen
+		}
+
+		//Projectiles
+		for (int i = 0; i < projectiles.size(); i++) {
+			Projectile p = projectiles.get(i);
+			p.update();
+
+			// Prüfen ob das Projektil einen Schleim trifft
+			for (int j = 0; j < slimes.size(); j++) {
+				Slime s = slimes.get(j);
+
+				double xDist = p.worldX - s.worldX;
+				double yDist = p.worldY - s.worldY;
+				double distSq = (xDist * xDist) + (yDist * yDist);
+				double hitRadius = 24; // Treffer-Radius
+
+				if (distSq < (hitRadius * hitRadius)) {
+					// Schleim verliert Leben (muss noch gemacht werden
+					// s.healthPoints -= p.damage;
+
+					// Schleim testweise direkt löschen, wenn getroffen:
+					slimes.remove(j);
+
+					p.alive = false; // Projektil zerstören
+					break;
+				}
+			}
+
+			// Wenn das Projektil abgelaufen oder getroffen hat, aus Liste entfernen
+			if (!p.alive) {
+				projectiles.remove(i);
+				i--; // Index anpassen
+			}
+		}
 
 
 		//Spawner Slimes
 		spawner.update(slimes); //updated die Slimes (Spawncounter usw.)
 
 		for (int i = 0; i < slimes.size(); i++) { //Bewegt alle Schleime
-			if (slimes.get(i) != null) {
+			if (slimes.get(i) != null) {  //
 				slimes.get(i).moveSlime();
 			}
 		}
@@ -159,9 +205,13 @@ public class GamePanel extends JPanel implements Runnable{
 		//Player
 		player.draw(g2);
 
-		//Enemies
-		slime.draw(g2);
+		//Projectile
+		for (Projectile p : projectiles) { p.draw(g2); }
 
+		//Enemies
+		for (int i = 0; i < slimes.size(); i++) {
+			slimes.get(i).draw(g2);
+		}
 		//UI
 		ui.draw(g2);
 		

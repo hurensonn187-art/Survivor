@@ -83,23 +83,34 @@ public class Player extends Entity {
 			return image;
 	}
 
-	void takeDamage(){
-		double xDistance = gp.player.worldX - gp.slime.worldX;
-		double yDistance = gp.player.worldY - gp.slime.worldY;
+	void takeDamage() {
+		//nur wenn verwundbar ist
+		if (isInvincible == false) {
 
-		double distanceSquared = (xDistance * xDistance) + (yDistance * yDistance);
+			// Liste aller Schleime im GamePanel durch
+			for (int i = 0; i < gp.slimes.size(); i++) {
+				// den Schleim aus der Liste ziehen
+				Slime currentSlime = gp.slimes.get(i);
 
-		// Der Radius, ab dem der Schleim Schaden macht
-		double attackRadius = 16;
+				// Abstand zu spezifischen Schleim berechnen
+				double xDistance = gp.player.worldX - currentSlime.worldX;
+				double yDistance = gp.player.worldY - currentSlime.worldY;
 
-		// Wir vergleichen die quadrierten Werte
-		if(isInvincible == false){
-			if(distanceSquared < (attackRadius * attackRadius)) {
-			healthPoints -= gp.slime.defaultDamage;
-			isInvincible = true;
+				double distanceSquared = (xDistance * xDistance) + (yDistance * yDistance);
+
+				double attackRadius = 16;
+
+				if (distanceSquared < (attackRadius * attackRadius)) {
+					healthPoints -= currentSlime.defaultDamage;
+					isInvincible = true;
+
+
+					// Schleife abbrechen da wir in diesem Frame unverwundbar werden
+					break;
+				}
 			}
 		}
-		if(healthPoints == 0){
+		if(healthPoints <= 0){
 			gp.ui.gameLost = true;
 		}
 	}
