@@ -44,7 +44,7 @@ public class Projectile {
         double screenX = worldX - gp.player.worldX + gp.player.screenX;
         double screenY = worldY - gp.player.worldY + gp.player.screenY;
 
-        g2.setColor(Color.YELLOW);
+        g2.setColor(Color.RED);
         g2.fillRect((int)screenX, (int)screenY, 10, 10);
     }
 }

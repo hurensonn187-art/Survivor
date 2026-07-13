@@ -73,7 +73,7 @@ public class TileManager {
 				
 				while(col < gp.maxWorldCol) {
 					
-					String numbers[] = line.split(" "); // macht aus der Linie an Zahlen einzelne
+					String numbers[] = line.split(" "); // macht aus der Linie an Zahlen einzelne (aus 1 0 0 0 1 =>fünf einzelne 1; 0; 0; 0; 1
 					
 					int num = Integer.parseInt(numbers[col]);
 					

@@ -9,13 +9,12 @@ public class EnemySpawner {
 
     GamePanel gp;
     int spawnCounter = 0;
-    int spawnInterval = 120; // Alle 2 Sekunden bei 60 FPS  // noch ändern!!!
+    int spawnInterval = 10; // Alle 2 Sekunden bei 60 FPS  // noch ändern!!!
 
     public EnemySpawner(GamePanel gp) {
         this.gp = gp;
     }
 
-    // Diese Methode wird in der update() von GamePanel aufgerufen
     public void update(ArrayList<Slime> slimes) {
         spawnCounter++;
 
@@ -25,7 +24,7 @@ public class EnemySpawner {
         }
     }
 
-    // Logik, wo und wie ein Gegner entsteht
+    // wo und wie ein Gegner entsteht
     private void spawnEnemy(ArrayList<Slime> slimes) {
         // Zufällige Position auf der Map  (map ist 50x50 groß)
         int minTile = 10;
@@ -37,7 +36,7 @@ public class EnemySpawner {
         // Neuen Schleim erzeugen und der Liste hinzufügen
         slimes.add(new Slime(gp, randomX, randomY));
 
-        System.out.println("Ein Schleim ist bei X: " + randomX + ", Y: " + randomY + " gespawnt!");
+        //System.out.println("Schleim bei " + randomX + ", " + randomY + " gespawnt");
     }
 }
 

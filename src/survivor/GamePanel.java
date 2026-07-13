@@ -51,7 +51,7 @@ public class GamePanel extends JPanel implements Runnable{
 	
 	//Entities und Objects
 	public Player player = new Player(this,keyH);
-	public SuperObject obj[] = new SuperObject[10];
+	public SuperObject[] obj = new SuperObject[10];
 	public ArrayList<Slime> slimes = new ArrayList<>();
 
 	//Waffen
@@ -113,7 +113,7 @@ public class GamePanel extends JPanel implements Runnable{
 				Thread.sleep((long)remainingTime); //hält den Thread an damit er in 60fps läuft und nicht so schnell wie der pc kann
 				
 				nextDrawTime = nextDrawTime + drawInterval;
-				
+
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -128,7 +128,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		player.update();
 
-		// --- WAFFENSYSTEM AUTOMATISCHES FEUERN ---
+		//Weapons
 		weaponAttackCounter++;
 		if(weaponAttackCounter >= weaponCooldown) {
 			// Ein Projektil an der Position des Spielers in seine Blickrichtung abfeuern
@@ -188,7 +188,7 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		//Debug
 		long drawStart = 0;
-		if(keyH.checkDrawTime == true) {
+		if(keyH.checkDrawTime) {
 		drawStart = System.nanoTime();  //zeigt an wieviel Zeit pro Update vergeht
 		}
 		
@@ -216,7 +216,7 @@ public class GamePanel extends JPanel implements Runnable{
 		ui.draw(g2);
 		
 		//debug
-		if(keyH.checkDrawTime == true) {
+		if(keyH.checkDrawTime) {
 		long drawEnd = System.nanoTime();
 		long passed =drawEnd - drawStart;
 		g2.setColor(Color.white);
