@@ -72,10 +72,10 @@ public class UI {
 			gp.gameThread = null;
 
 		} else {
-			g2.setFont(arial_40);
-			g2.setColor(Color.white);
-			g2.drawImage(keyImage, gp.tileSize / 2, gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
-			g2.drawString("x " + gp.player.hasKey, 90, 70);
+			//g2.setFont(arial_40); wird nicht genutzt in dieser Version des Spiels
+			//g2.setColor(Color.white);
+			//g2.drawImage(keyImage, gp.tileSize / 2, gp.tileSize / 2, gp.tileSize, gp.tileSize, null);
+			//g2.drawString("x " + gp.player.hasKey, 90, 70);
 
 			//Time
 			playTime += (double) 1 / 60;
