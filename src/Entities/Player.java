@@ -205,7 +205,7 @@ public class Player extends Entity {
 		}
 						
 				
-	public void pickUpObject(int i) {
+	public void pickUpObject(int i) { //wird nicht benutzt -> Assetsetter
 		
 		if(i != 999) {
 			

@@ -1,4 +1,4 @@
-package object;
+package object; //wird nicht genutzt -> Superobject
 
 import java.io.IOException;
 

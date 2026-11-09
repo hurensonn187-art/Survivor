@@ -66,7 +66,7 @@ public class CollisionChecker {
 			break;
 		}
 	}
-	public int checkObject(Entity entity,boolean player) {
+	public int checkObject(Entity entity,boolean player) {   //wird nicht genutzt -> Assetsetter
 		
 		int index = 999;
 		

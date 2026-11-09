@@ -77,7 +77,7 @@ public class GamePanel extends JPanel implements Runnable{
 		this.setFocusable(true);
 	}
 
-	public void setupGame()	{   //platziert alle Items
+	public void setupGame()	{   //platziert alle Items, wird nicht genutzt in dieser Version des Spiels
 		aSetter.setObject();
 		//playMusic(0); // -> sound array [1] -> BackgroundSongTest
 	}
@@ -239,12 +239,12 @@ public class GamePanel extends JPanel implements Runnable{
 		//Tile
 		tileM.draw(g2);
 		
-		//Objects
-		for(int i = 0; i < obj.length; i++) {
-			if(obj[i] != null) {
-				obj[i].draw(g2, this);
-			}
-		}
+		//Objects  , wird nicht genutzt in dieser Version des Spiels
+		//for(int i = 0; i < obj.length; i++) {
+		//	if(obj[i] != null) {
+		//		obj[i].draw(g2, this);
+		//	}
+		//}
 		
 		//Player
 		player.draw(g2);

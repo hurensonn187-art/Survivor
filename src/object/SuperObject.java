@@ -1,4 +1,4 @@
-package object;
+package object; //objects werden nicht genutzt im Spiel sind aber dafür da, falls das Spiel ausgebaut wird
 
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
