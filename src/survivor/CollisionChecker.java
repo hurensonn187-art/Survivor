@@ -12,12 +12,12 @@ public class CollisionChecker {
 	
 	public void checkTile(Entity entity) {
 		
-		int entityLeftWorldX = (int)entity.worldX + entity.solidArea.x;			//Koordinaten der CollisionBox
-		int entityRightWorldX = (int)entity.worldX + entity.solidArea.x + entity.solidArea.width;
+		int entityLeftWorldX = (int)entity.worldX + entity.solidArea.x;			//Koordinaten der CollisionBox, ein Rechteck um den Spieler oder anderen Sachen(-> Entities)
+		int entityRightWorldX = (int)entity.worldX + entity.solidArea.x + entity.solidArea.width;  // Die 4 Eckpunkte
 		int entityTopWorldY = (int)entity.worldY + entity.solidArea.y;
 		int entityBottomWorldY = (int)entity.worldY + entity.solidArea.y + entity.solidArea.height;
 		
-		int entityLeftCol = entityLeftWorldX/gp.tileSize;
+		int entityLeftCol = entityLeftWorldX/gp.tileSize; //4 Seiten
 		int entityRightCol = entityRightWorldX/gp.tileSize;
 		int entityTopRow = entityTopWorldY/gp.tileSize;
 		int entityBottomRow = entityBottomWorldY/gp.tileSize;
@@ -27,12 +27,12 @@ public class CollisionChecker {
 
 		switch(entity.direction) {
 		
-		case "up":
-			entityTopRow = (entityTopWorldY - entity.speed)/gp.tileSize; //"predicted" wohin gelaufen wird, damit man weniger
-			tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow]; // collision checken muss
+		case "up": //weiß wohin gelaufen wird, damit man weniger collision checken muss, jeder case schaut nur 2 Punkte an und nicht alle 4
+			entityTopRow = (entityTopWorldY - entity.speed)/gp.tileSize;
+			tileNum1 = gp.tileM.mapTileNum[entityLeftCol][entityTopRow]; // schaut sich auf der Tilemap 2 Tiles an, an welche die Figur läuft
 			tileNum2 = gp.tileM.mapTileNum[entityRightCol][entityTopRow];
 			
-			if(gp.tileM.tile[tileNum1].collision == true || gp.tileM.tile[tileNum2].collision == true) {
+			if(gp.tileM.tile[tileNum1].collision == true || gp.tileM.tile[tileNum2].collision == true) { // wenn diese 2 Tiles Kollision haben wird der Bewegungsvorgang gestoppt
 				entity.collisionOn = true;
 			}		
 			break;

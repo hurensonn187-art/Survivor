@@ -63,6 +63,12 @@ public class UI {
 			y = gp.screenHeight / 2 + gp.tileSize * 2;
 			g2.drawString(text, x, y);
 
+			text = "Finale Kills: " + dFormat.format(playTime);
+			textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth(); //gibt Länge von Text
+			x = gp.screenWidth / 2 - textLength / 2;
+			y = gp.screenHeight / 3 + gp.tileSize * 2;
+			g2.drawString(text, x, y);
+
 			gp.gameThread = null;
 
 		} else {
@@ -114,6 +120,12 @@ public class UI {
 			y = gp.screenHeight / 2 + gp.tileSize * 2;
 			g2.drawString(text, x, y);
 
+			text = "Finale Kills: " + dFormat.format(playTime);
+			textLength = (int) g2.getFontMetrics().getStringBounds(text, g2).getWidth(); //gibt Länge von Text
+			x = gp.screenWidth / 2 - textLength / 2;
+			y = gp.screenHeight / 3 + gp.tileSize * 2;
+			g2.drawString(text, x, y);
+
 			gp.gameThread = null;
 
 		}
@@ -123,6 +135,11 @@ public class UI {
 		g2.fillRect((gp.screenWidth -100) / 2,35,gp.player.healthPoints * 2,16);
 		g2.setFont(arial_30);
 		g2.drawString("Leben:" + gp.player.healthPoints, (gp.screenWidth -100) / 2,30);
+
+		//killCounter Anzeigen
+		g2.setColor(Color.BLACK);
+		g2.setFont(arial_30);
+		g2.drawString("Kills:" + gp.killCounter, (gp.screenWidth -400) / 2,30);
 	}
 	
 	

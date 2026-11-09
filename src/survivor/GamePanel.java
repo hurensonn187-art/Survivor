@@ -46,6 +46,7 @@ public class GamePanel extends JPanel implements Runnable{
 	public UI ui = new UI(this);
 	public CollisionChecker cChecker = new CollisionChecker(this);
 	public AssetSetter aSetter = new AssetSetter(this);
+	public int killCounter = 0;
 
 	public EnemySpawner spawner = new EnemySpawner(this);
 	
@@ -58,7 +59,11 @@ public class GamePanel extends JPanel implements Runnable{
 	public ArrayList<Projectile> projectiles = new ArrayList<>();
 	int weaponAttackCounter = 0;
 	int weaponCooldown = 60; // Schießt jede Sekunde (bei 60 FPS)
-	
+	public int pierceHits;
+	// Upgrade-Stufen
+	public int projectilePierce = 1;     //Wie viele Gegner ein Projektil durchschlagen kann
+	public int projectileCount = 1;      //Wie viele Projektile gleichzeitig abgefeuert werden
+	private int lastUpgradeKillThreshold = 0; //Merkt sich, wann das letzte Upgrade war
 	
 	
 	
@@ -86,13 +91,13 @@ public class GamePanel extends JPanel implements Runnable{
 	}
 
 	@Override
-	public void run() { // updaten und screen drawen
+	public void run() { // updaten und Screen drawen
 		
 		double drawInterval = 1000000000/FPS;
 		double nextDrawTime = System.nanoTime() + drawInterval;
 		
 		
-		while(gameThread != null) { //while gameThread läuft immer
+		while(gameThread != null) { //while gameThread läuft -> immer
 			
 			
 			
@@ -131,8 +136,30 @@ public class GamePanel extends JPanel implements Runnable{
 		//Weapons
 		weaponAttackCounter++;
 		if(weaponAttackCounter >= weaponCooldown) {
-			// Ein Projektil an der Position des Spielers in seine Blickrichtung abfeuern
-			projectiles.add(new Projectile(this, player.worldX, player.worldY, player.direction));
+			double baseDx = 0, baseDy = 0;
+			switch(player.direction) {
+				case "up":    baseDy = -1; break;
+				case "down":  baseDy = 1;  break;
+				case "left":  baseDx = -1; break;
+				case "right": baseDx = 1;  break;
+			}
+
+			int count = projectileCount;
+			double spreadAngle = Math.toRadians(15); // 15 Grad Fächerung zwischen den Schüssen
+
+			// 2. Schleife feuert je nach Upgrade-Stufe mehrere Projektile ab
+			for (int i = 0; i < count; i++) {
+				// Berechnet den Abweichungswinkel für das Fächermuster
+				double offsetAngle = (i - (count - 1) / 2.0) * spreadAngle;
+
+				// Richtungsvektor drehen
+				double dx = baseDx * Math.cos(offsetAngle) - baseDy * Math.sin(offsetAngle);
+				double dy = baseDx * Math.sin(offsetAngle) + baseDy * Math.cos(offsetAngle);
+
+				// Projektil mit den berechneten dx/dy-Werten erstellen
+				projectiles.add(new Projectile(this, player.worldX + 32, player.worldY + 32, dx, dy));
+			}
+
 			weaponAttackCounter = 0; // Cooldown zurücksetzen
 		}
 
@@ -148,16 +175,33 @@ public class GamePanel extends JPanel implements Runnable{
 				double xDist = p.worldX - s.worldX;
 				double yDist = p.worldY - s.worldY;
 				double distSq = (xDist * xDist) + (yDist * yDist);
-				double hitRadius = 24; // Treffer-Radius
+				double hitRadius = 48; // Treffer-Radius
 
 				if (distSq < (hitRadius * hitRadius)) {
-					// Schleim verliert Leben (muss noch gemacht werden
-					// s.healthPoints -= p.damage;
 
-					// Schleim testweise direkt löschen, wenn getroffen:
+					//Schleim direkt löschen, wenn getroffen:
 					slimes.remove(j);
+					killCounter++;
+					//Prüfen, ob seit dem letzten Upgrade 50 Kills vergangen sind
+					if (killCounter >= lastUpgradeKillThreshold + 50) {
+						lastUpgradeKillThreshold += 50;
 
-					p.alive = false; // Projektil zerstören
+						//Alternierend ein Upgrade wählen: Bei 50, 150... -> Durchschlag | Bei 100, 200... -> Mehr Projektile
+						if ((lastUpgradeKillThreshold / 50) % 2 == 1) {
+							projectilePierce++; // Mehr Durchschlagkraft
+							ui.showMessage("Mehr Durchschlagkraft");
+
+						} else {
+							projectileCount++;  // Mehr Projektile
+							ui.showMessage("Mehr Projektile");
+						}
+					}
+
+					pierceHits--;
+					if (pierceHits <= 0) {
+						p.alive = false; // Erst deaktivieren, wenn alle Durchschläge aufgebraucht sind
+					}
+					pierceHits = projectilePierce;
 					break;
 				}
 			}
