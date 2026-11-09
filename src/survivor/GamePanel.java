@@ -201,7 +201,6 @@ public class GamePanel extends JPanel implements Runnable{
 					if (pierceHits <= 0) {
 						p.alive = false; // Erst deaktivieren, wenn alle Durchschläge aufgebraucht sind
 					}
-					pierceHits = projectilePierce;
 					break;
 				}
 			}

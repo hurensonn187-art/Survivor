@@ -1,0 +1,19 @@
+classDiagram
+  namespace Survivor {
+    class Player {
+      + gp : GamePanel?
+      + keyH : KeyHandler?
+      + screenX : int?
+      + screenY : int?
+      + hasKey : int?
+      + invincibilityFrames : int?
+      + isInvincible : boolean?
+      + setDefaultValues() void?
+      + getPlayerImage() void?
+      + setup() BufferedImage?
+      + takeDamage() void?
+      + update() void?
+      + pickUpObject() void?
+      + draw() void?
+    }
+  }

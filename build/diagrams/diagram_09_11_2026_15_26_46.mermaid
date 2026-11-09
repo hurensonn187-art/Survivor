@@ -1,0 +1,43 @@
+classDiagram
+  namespace Survivor {
+    class GamePanel {
+      + originalTileSize : int?
+      + scale : int?
+      + tileSize : int?
+      + maxScreenCol : int?
+      + maxScreenRow : int?
+      + screenWidth : int?
+      + screenHeight : int?
+      + maxWorldCol : int?
+      + maxWorldRow : int?
+      + FPS : int?
+      + tileM : TileManager?
+      + keyH : KeyHandler?
+      + music : Sound?
+      + soundEffect : Sound?
+      + gameThread : Thread?
+      + ui : UI?
+      + cChecker : CollisionChecker?
+      + aSetter : AssetSetter?
+      + killCounter : int?
+      + spawner : EnemySpawner?
+      + player : Player?
+      + obj : SuperObject[]?
+      + slimes : ArrayList&ltSlime>?
+      + projectiles : ArrayList&ltProjectile>?
+      + weaponAttackCounter : int?
+      + weaponCooldown : int?
+      + pierceHits : int?
+      + projectilePierce : int?
+      + projectileCount : int?
+      - lastUpgradeKillThreshold : int?
+      + setupGame() void?
+      + startGameThread() void?
+      + run() void?
+      + update() void?
+      + paintComponent() void?
+      + playMusic() void?
+      + stopMusic() void?
+      + playSoundEffect() void?
+    }
+  }
