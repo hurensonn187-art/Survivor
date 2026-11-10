@@ -147,20 +147,18 @@ public class GamePanel extends JPanel implements Runnable{
 			int count = projectileCount;
 			double spreadAngle = Math.toRadians(15); // 15 Grad Fächerung zwischen den Schüssen
 
-			// 2. Schleife feuert je nach Upgrade-Stufe mehrere Projektile ab
-			for (int i = 0; i < count; i++) {
-				// Berechnet den Abweichungswinkel für das Fächermuster
-				double offsetAngle = (i - (count - 1) / 2.0) * spreadAngle;
 
-				// Richtungsvektor drehen
+			for (int i = 0; i < count; i++) { //Schleife feuert je nach Upgrade-Stufe mehrere Projektile ab
+
+				double offsetAngle = (i - (count - 1) / 2.0) * spreadAngle;// Berechnet den Abweichungswinkel damit nicht alle in die selbe Richtung fliegen
+
 				double dx = baseDx * Math.cos(offsetAngle) - baseDy * Math.sin(offsetAngle);
 				double dy = baseDx * Math.sin(offsetAngle) + baseDy * Math.cos(offsetAngle);
 
-				// Projektil mit den berechneten dx/dy-Werten erstellen
-				projectiles.add(new Projectile(this, player.worldX + 32, player.worldY + 32, dx, dy));
+				projectiles.add(new Projectile(this, player.worldX + 32, player.worldY + 32, dx, dy));// Projektil erstellen
 			}
 
-			weaponAttackCounter = 0; // Cooldown zurücksetzen
+			weaponAttackCounter = 0; //Cooldown zurücksetzen
 		}
 
 		//Projectiles
@@ -168,8 +166,8 @@ public class GamePanel extends JPanel implements Runnable{
 			Projectile p = projectiles.get(i);
 			p.update();
 
-			// Prüfen ob das Projektil einen Schleim trifft
-			for (int j = 0; j < slimes.size(); j++) {
+
+			for (int j = 0; j < slimes.size(); j++) {//Prüfen ob das Projektil einen Schleim trifft
 				Slime s = slimes.get(j);
 
 				double xDist = p.worldX - s.worldX;
@@ -179,15 +177,14 @@ public class GamePanel extends JPanel implements Runnable{
 
 				if (distSq < (hitRadius * hitRadius)) {
 
-					//Schleim direkt löschen, wenn getroffen:
-					slimes.remove(j);
+
+					slimes.remove(j);	//Schleim löschen, wenn getroffen:
 					killCounter++;
-					//Prüfen, ob seit dem letzten Upgrade 50 Kills vergangen sind
-					if (killCounter >= lastUpgradeKillThreshold + 50) {
+
+					if (killCounter >= lastUpgradeKillThreshold + 50) {//Prüfen, ob seit dem letzten Upgrade 50 Kills vergangen sind
 						lastUpgradeKillThreshold += 50;
 
-						//Alternierend ein Upgrade wählen: Bei 50, 150... -> Durchschlag | Bei 100, 200... -> Mehr Projektile
-						if ((lastUpgradeKillThreshold / 50) % 2 == 1) {
+						if ((lastUpgradeKillThreshold / 50) % 2 == 1) {//Alternierend ein Upgrade wählen: Bei 50, 150... -> Durchschlag | Bei 100, 200... -> Mehr Projektile
 							projectilePierce++; // Mehr Durchschlagkraft
 							ui.showMessage("Mehr Durchschlagkraft");
 
@@ -205,13 +202,12 @@ public class GamePanel extends JPanel implements Runnable{
 				}
 			}
 
-			// Wenn das Projektil abgelaufen oder getroffen hat, aus Liste entfernen
-			if (!p.alive) {
+
+			if (!p.alive) {	// Wenn das Projektil abgelaufen oder getroffen hat, aus Liste entfernen
 				projectiles.remove(i);
-				i--; // Index anpassen
+				i--;
 			}
 		}
-
 
 		//Spawner Slimes
 		spawner.update(slimes); //updated die Slimes (Spawncounter usw.)
